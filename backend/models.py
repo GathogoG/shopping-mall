@@ -1,55 +1,67 @@
-# from app import db
-from sqlalchemy import MetaData
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine, Column, Integer, String, Text, DECIMAL, ForeignKey, TIMESTAMP
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, sessionmaker
+from config import DATABASE_URI
 
-metadata = MetaData() 
+Base = declarative_base()
 
-db = SQLAlchemy(metadata  = metadata) 
-
-class User(db.Model):
-
+class User(Base):
     __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
-    # name = db.Column(db.String(50), nullable=False)
-    username = db.Column(db.String(50), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(128), nullable=False)
+    
+    user_id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    email = Column(String, nullable=False, unique=True)
+    password = Column(String, nullable=False)
+    created_at = Column(TIMESTAMP, server_default='CURRENT_TIMESTAMP')
+    
+    orders = relationship('Order', back_populates='user')
 
-class Product(db.Model):
-
+class Product(Base):
     __tablename__ = 'products'
+    
+    product_id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    description = Column(Text)
+    price = Column(DECIMAL(10, 2), nullable=False)
+    stock = Column(Integer, nullable=False)
+    created_at = Column(TIMESTAMP, server_default='CURRENT_TIMESTAMP')
 
-    id = db.Column(db.Integer, primary_key=True)
-
-    name = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text)
-    price = db.Column(db.Float, nullable=False)
-    stock_quantity = db.Column(db.Integer, nullable=False)
-
-class Order(db.Model):
-
+class Order(Base):
     __tablename__ = 'orders'
 
-    id = db.Column(db.Integer, primary_key=True)
-    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    order_date = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
-    total_amount = db.Column(db.Float, nullable=False)
-    status = db.Column(db.String(50), nullable=False)
+    order_id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
+    product_id = Column(Integer, ForeignKey('products.product_id'), nullable=False)
+    order_date = Column(TIMESTAMP, server_default='CURRENT_TIMESTAMP')
+    total_amount = Column(DECIMAL(10, 2), nullable=False)
+    status = Column(String(255), nullable=False)
+    
+    user = relationship('User', back_populates='orders')
+    payments = relationship('Payment', back_populates='order')
 
-    # user = db.relationship('User', backref=db.backref('orders', lazy=True))
+class Payment(Base):
+    __tablename__ = 'payments'
+    
+    payment_id = Column(Integer, primary_key=True, autoincrement=True)
+    order_id = Column(Integer, ForeignKey('orders.order_id'), nullable=False)
+    product_id = Column(Integer, ForeignKey('products.product_id'), nullable=False)
+    amount = Column(DECIMAL(10, 2), nullable=False)
+    payment_date = Column(TIMESTAMP, server_default='CURRENT_TIMESTAMP')
+    method = Column(String(255), nullable=False)
+    status = Column(String(255), nullable=False)
+    
+    order = relationship('Order', back_populates='payments')
 
-class OrderItem(db.Model):
+def setup_database():
+    engine = create_engine(DATABASE_URI)
+    Base.metadata.create_all(engine)
+    return engine
 
-    __tablename__ = 'order_items'
+if __name__ == "__main__":
+    engine = setup_database()
+    print("Database tables created")
 
-    id = db.Column(db.Integer, primary_key=True)
-    # order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
-    # product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
-    quantity = db.Column(db.Integer, nullable=False)
-    unit_price = db.Column(db.Float, nullable=False)
-    order = db.relationship('Order', backref=db.backref('items', lazy=True))
-    product = db.relationship('Product', backref=db.backref('order_items', lazy=True))
+def create_session(engine):
+    Session = sessionmaker(bind=engine)
+    return Session()
 
-if __name__ == '__main__':
-    # This block will be executed if you run `python models.py` directly
-    db.create_all()
