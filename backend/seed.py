@@ -1,11 +1,6 @@
-import sys
-import os
-from sqlalchemy import create_engine, Column, Integer, String, Text, DECIMAL, ForeignKey, TIMESTAMP
+from sqlalchemy import create_engine, Column, Integer, String, Text, DECIMAL, ForeignKey, TIMESTAMP, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
-
-from backend.config import DATABASE_URI
-
 from config import DATABASE_URI
 
 Base = declarative_base()
@@ -17,7 +12,7 @@ class User(Base):
     name = Column(String, nullable=False)
     email = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
-    created_at = Column(TIMESTAMP, server_default='CURRENT_TIMESTAMP')
+    created_at = Column(TIMESTAMP, server_default=func.now())
     
     orders = relationship('Order', back_populates='user')
 
@@ -29,7 +24,7 @@ class Product(Base):
     description = Column(Text)
     price = Column(DECIMAL(10, 2), nullable=False)
     stock = Column(Integer, nullable=False)
-    created_at = Column(TIMESTAMP, server_default='CURRENT_TIMESTAMP')
+    created_at = Column(TIMESTAMP, server_default=func.now())
 
 class Order(Base):
     __tablename__ = 'orders'
@@ -37,7 +32,7 @@ class Order(Base):
     order_id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
     product_id = Column(Integer, ForeignKey('products.product_id'), nullable=False)
-    order_date = Column(TIMESTAMP, server_default='CURRENT_TIMESTAMP')
+    order_date = Column(TIMESTAMP, server_default=func.now())
     total_amount = Column(DECIMAL(10, 2), nullable=False)
     status = Column(String(255), nullable=False)
     
@@ -51,7 +46,7 @@ class Payment(Base):
     order_id = Column(Integer, ForeignKey('orders.order_id'), nullable=False)
     product_id = Column(Integer, ForeignKey('products.product_id'), nullable=False)
     amount = Column(DECIMAL(10, 2), nullable=False)
-    payment_date = Column(TIMESTAMP, server_default='CURRENT_TIMESTAMP')
+    payment_date = Column(TIMESTAMP, server_default=func.now())
     method = Column(String(255), nullable=False)
     status = Column(String(255), nullable=False)
     
@@ -69,4 +64,3 @@ if __name__ == "__main__":
 def create_session(engine):
     Session = sessionmaker(bind=engine)
     return Session()
-
