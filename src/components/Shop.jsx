@@ -30,6 +30,8 @@ const Shop = () => {
               <p className="drink-instructions">{drink.strInstructions}</p>
               <p className="drink-ingredients">
                 <strong>Ingredients:</strong> {drink.strIngredient1}, {drink.strIngredient2}, {drink.strIngredient3}
+                <br/>
+                <button id='addtocart'>ADD TO CART</button>
               </p>
             </div>
           </div>
