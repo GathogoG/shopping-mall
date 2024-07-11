@@ -20,7 +20,7 @@ const Login = () => {
         <input  type='text' id='pass' className='input'></input>
         </div>
         <div>
-            <h3>don't have an account?</h3><button>sign in</button>
+            <h3>don't have an account?</h3><button ><a href='./Register'>sign in</a></button>
         </div>
       </form>
     </div>
