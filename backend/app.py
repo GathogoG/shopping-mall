@@ -1,75 +1,55 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from models import db, Product
+from models import db, Product, CartItem
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///shopping.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Initialize SQLAlchemy
 db.init_app(app)
-
-# Initialize Flask-Migrate
 migrate = Migrate(app, db)
 
 # Create all tables
 with app.app_context():
     db.create_all()
 
-# Route to fetch all products
-@app.route('/products', methods=['GET'])
-def get_products():
-    products = Product.query.all()
-    product_list = [{
-        'id': product.id,
-        'name': product.name,
-        'description': product.description,
-        'price': product.price,
-        'stock_quantity': product.stock_quantity
-    } for product in products]
-    return jsonify({'products': product_list})
+# Route to fetch all items in the cart
+@app.route('/cart', methods=['GET'])
+def get_cart_items():
+    cart_items = CartItem.query.all()
+    cart_list = [{
+        'id': item.id,
+        'product_id': item.product_id,
+        'quantity': item.quantity,
+        'product_name': item.product.name,
+        'price': item.product.price
+    } for item in cart_items]
+    return jsonify({'cart_items': cart_list})
 
-# Route to add a new product
-@app.route('/products', methods=['POST'])
-def add_product():
+# Route to add an item to the cart
+@app.route('/cart', methods=['POST'])
+def add_to_cart():
     data = request.json
-    new_product = Product(
-        name=data['name'],
-        description=data.get('description', ''),
-        price=data['price'],
-        stock_quantity=data['stock_quantity']
+    new_cart_item = CartItem(
+        product_id=data['product_id'],
+        quantity=data['quantity']
     )
-    db.session.add(new_product)
+    db.session.add(new_cart_item)
     db.session.commit()
-    return jsonify({'message': 'Product added successfully!', 'product': {'id': new_product.id}}), 201
+    return jsonify({'message': 'Item added to cart!', 'item_id': new_cart_item.id}), 201
 
-# Route to update an existing product
-@app.route('/products/<int:id>', methods=['PUT'])
-def update_product(id):
-    data = request.json
-    product = Product.query.get(id)
-    if not product:
-        return jsonify({'message': 'Product not found!'}), 404
+# Route to remove an item from the cart
+@app.route('/cart/<int:item_id>', methods=['DELETE'])
+def remove_from_cart(item_id):
+    cart_item = CartItem.query.get(item_id)
+    if not cart_item:
+        return jsonify({'message': 'Cart item not found!'}), 404
     
-    product.name = data.get('name', product.name)
-    product.description = data.get('description', product.description)
-    product.price = data.get('price', product.price)
-    product.stock_quantity = data.get('stock_quantity', product.stock_quantity)
-    
+    db.session.delete(cart_item)
     db.session.commit()
-    return jsonify({'message': 'Product updated successfully!'})
-
-# Route to delete a product
-@app.route('/products/<int:id>', methods=['DELETE'])
-def delete_product(id):
-    product = Product.query.get(id)
-    if not product:
-        return jsonify({'message': 'Product not found!'}), 404
-    
-    db.session.delete(product)
-    db.session.commit()
-    return jsonify({'message': 'Product deleted successfully!'})
+    return jsonify({'message': 'Item removed from cart!'})
 
 if __name__ == '__main__':
+    app.run(port=5001) 
     app.run(debug=True)
