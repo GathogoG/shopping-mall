@@ -50,6 +50,28 @@ def remove_from_cart(item_id):
     db.session.commit()
     return jsonify({'message': 'Item removed from cart!'})
 
+# Route to add a product with an image URL
+@app.route('/products', methods=['POST'])
+def add_product():
+    data = request.form  # Use form data to handle product details
+
+    # Check if the request contains an image URL
+    if 'image_url' in data:
+        image_url = data['image_url']
+    else:
+        return jsonify({'message': 'No valid image URL provided'}), 400
+
+    # Create a new product
+    new_product = Product(
+        name=data['name'],
+        description=data['description'],
+        price=data['price'],
+        stock_quantity=data['stock_quantity'],
+        image_url=image_url  # Store the URL in the database
+    )
+    db.session.add(new_product)
+    db.session.commit()
+    return jsonify({'message': 'Product added successfully', 'product_id': new_product.id}), 201
+
 if __name__ == '__main__':
-    app.run(port=5555) 
     app.run(debug=True)

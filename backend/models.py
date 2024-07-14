@@ -1,4 +1,3 @@
-# models.py
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -10,6 +9,7 @@ class Product(db.Model):
     description = db.Column(db.Text)
     price = db.Column(db.Float, nullable=False)
     stock_quantity = db.Column(db.Integer, nullable=False)
+    image_url = db.Column(db.String(200))  # Field to store image URL/path
 
 class CartItem(db.Model):
     __tablename__ = 'cart_items'

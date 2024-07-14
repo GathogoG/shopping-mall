@@ -1,3 +1,4 @@
+# seed.py
 from app import app, db
 from models import Product, CartItem
 
@@ -11,9 +12,9 @@ def seed_database():
 
         # Add sample products
         products = [
-            Product(name='Car', description='Description for Car', price=909.99, stock_quantity=100),
-            Product(name='Pen', description='Description for Pen', price=193.99, stock_quantity=50),
-            Product(name='House', description='Description for House', price=279.99, stock_quantity=20)
+            Product(name='Car', description='Description for Car', price=909.99, stock_quantity=100, image_url='https://i.pinimg.com/474x/c0/b2/34/c0b234de7651f2e9de7c2a9578870909.jpg'),
+            Product(name='Pen', description='Description for Pen', price=193.99, stock_quantity=50, image_url='https://www.pinterest.com/pin/746964288281587428/'),
+            Product(name='House', description='Description for House', price=279.99, stock_quantity=20, image_url='https://i.pinimg.com/236x/23/78/bb/2378bb2b1e21fce6b3ae085cd462b121.jpg')
         ]
 
         db.session.bulk_save_objects(products)  # Efficiently add multiple products
