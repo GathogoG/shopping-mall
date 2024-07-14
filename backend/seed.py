@@ -1,4 +1,3 @@
-# seed.py
 from app import app, db
 from models import Product, CartItem
 
@@ -6,9 +5,9 @@ def seed_database():
     with app.app_context():
         db.create_all()  # Create tables if they don't exist
 
-        # Clear existing products and cart items (optional)
-        Product.query.delete()
-        CartItem.query.delete()
+        # Clear existing products and cart items
+        db.session.query(Product).delete()
+        db.session.query(CartItem).delete()
 
         # Add sample products
         products = [
@@ -18,12 +17,16 @@ def seed_database():
         ]
 
         db.session.bulk_save_objects(products)  # Efficiently add multiple products
-        db.session.commit()  # Commit the session
+        db.session.commit()  # Commit the session to get IDs for the products
 
-        # Add sample cart items (assuming product IDs correspond correctly)
+        # Retrieve the products to ensure correct IDs
+        car = Product.query.filter_by(name='Car').first()
+        pen = Product.query.filter_by(name='Pen').first()
+
+        # Add sample cart items using the retrieved product IDs
         cart_items = [
-            CartItem(product_id=1, quantity=2),  # Assuming product ID 1 exists
-            CartItem(product_id=2, quantity=1)   # Assuming product ID 2 exists
+            CartItem(product_id=car.id, quantity=2),
+            CartItem(product_id=pen.id, quantity=1)
         ]
 
         db.session.bulk_save_objects(cart_items)  # Efficiently add multiple cart items
