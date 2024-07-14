@@ -23,7 +23,7 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order_date = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     total_amount = db.Column(db.Float, nullable=False)
-    status = db.Column(db.String(50), nullable=False, default='Pending')
+    status = db.Column(db.String(50), nullable=False)
     items = db.relationship('OrderItem', backref='order', lazy=True)
 
 class OrderItem(db.Model):
@@ -34,3 +34,13 @@ class OrderItem(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     unit_price = db.Column(db.Float, nullable=False)
     product = db.relationship('Product', backref='order_items')
+
+class Payment(db.Model):
+    __tablename__ = 'payments'
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('orders.id'), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    payment_date = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
+    payment_method = db.Column(db.String(50), nullable=False)
+    status = db.Column(db.String(50), nullable=False)
+    order = db.relationship('Order', backref='payments')

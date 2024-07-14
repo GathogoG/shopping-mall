@@ -1,13 +1,18 @@
+# seed.py
 from app import app, db
-from models import Product, CartItem
+from models import Product, CartItem, Order, OrderItem, Payment
+from flask import current_app
 
 def seed_database():
     with app.app_context():
         db.create_all()  # Create tables if they don't exist
 
-        # Clear existing products and cart items
-        db.session.query(Product).delete()
-        db.session.query(CartItem).delete()
+        # Clear existing products, cart items, orders, order items, and payments (optional)
+        Product.query.delete()
+        CartItem.query.delete()
+        OrderItem.query.delete()
+        Order.query.delete()
+        Payment.query.delete()
 
         # Add sample products
         products = [
@@ -17,21 +22,47 @@ def seed_database():
         ]
 
         db.session.bulk_save_objects(products)  # Efficiently add multiple products
-        db.session.commit()  # Commit the session to get IDs for the products
+        db.session.commit()  # Commit the session
 
-        # Retrieve the products to ensure correct IDs
+        # Retrieve products to ensure IDs are correct
         car = Product.query.filter_by(name='Car').first()
         pen = Product.query.filter_by(name='Pen').first()
 
-        # Add sample cart items using the retrieved product IDs
+        # Add sample cart items
         cart_items = [
-            CartItem(product_id=car.id, quantity=2),
-            CartItem(product_id=pen.id, quantity=1)
+            CartItem(product_id=car.id, quantity=2),  # Using the correct product ID
+            CartItem(product_id=pen.id, quantity=1)   # Using the correct product ID
         ]
 
         db.session.bulk_save_objects(cart_items)  # Efficiently add multiple cart items
         db.session.commit()  # Commit the session
-        print("Database seeded with products and cart items!")
+
+        # Calculate total amount from cart items
+        total_amount = sum(item.quantity * db.session.get(Product, item.product_id).price for item in cart_items)
+
+        # Create a sample order
+        order = Order(total_amount=total_amount, status='Pending')
+        db.session.add(order)
+        db.session.commit()
+
+        order_items = [
+            OrderItem(order_id=order.id, product_id=item.product_id, quantity=item.quantity, unit_price=db.session.get(Product, item.product_id).price)
+            for item in cart_items
+        ]
+        db.session.bulk_save_objects(order_items)
+        db.session.commit()
+
+        # Clear the cart after order is placed
+        CartItem.query.delete()
+        db.session.commit()
+
+        # Process a sample payment
+        payment = Payment(order_id=order.id, amount=order.total_amount, payment_method='Credit Card', status='Completed')
+        db.session.add(payment)
+        order.status = 'Paid'
+        db.session.commit()
+
+        print("Database seeded with products, cart items, order, and payment!")
 
 if __name__ == '__main__':
     seed_database()

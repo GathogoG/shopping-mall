@@ -115,5 +115,4 @@ def view_orders():
     return jsonify({'orders': order_list})
 
 if __name__ == '__main__':
-    app.run(port=5555)
     app.run(debug=True)
