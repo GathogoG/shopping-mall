@@ -1,118 +1,64 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from models import db, Product, CartItem, Order, OrderItem
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///shopping.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
-db.init_app(app)
-migrate = Migrate(app, db)
+class Product(db.Model):
+    __tablename__ = 'products'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text)
+    price = db.Column(db.Float, nullable=False)
+    stock_quantity = db.Column(db.Integer, nullable=False)
+    image_url = db.Column(db.String)
 
-# Route to fetch all products
-@app.route('/products', methods=['GET'])
-def get_products():
-    products = Product.query.all()
-    product_list = [{
-        'id': product.id,
-        'name': product.name,
-        'description': product.description,
-        'price': product.price,
-        'stock_quantity': product.stock_quantity,
-        'image_url': product.image_url
-    } for product in products]
-    return jsonify({'products': product_list})
+class Order(db.Model):
+    __tablename__ = 'orders'
+    id = db.Column(db.Integer, primary_key=True)
+    total_amount = db.Column(db.Float, nullable=False)
+    status = db.Column(db.String(50), nullable=False)
 
-# Route to view cart items
-@app.route('/cart', methods=['GET'])
-def view_cart():
-    cart_items = CartItem.query.all()
-    cart_list = [{
-        'id': item.id,
-        'product_id': item.product_id,
-        'quantity': item.quantity,
-        'product': {
-            'name': item.product.name,
-            'description': item.product.description,
-            'price': item.product.price,
-            'image_url': item.product.image_url
-        }
-    } for item in cart_items]
-    return jsonify({'cart_items': cart_list})
+class OrderItem(db.Model):
+    __tablename__ = 'order_items'
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('orders.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    unit_price = db.Column(db.Float, nullable=False)
 
-# Route to add an item to the cart
-@app.route('/cart', methods=['POST'])
-def add_to_cart():
-    data = request.json
-    product_id = data.get('product_id')
-    quantity = data.get('quantity', 1)
+@app.route('/place_order', methods=['POST'])
+def place_order():
+    data = request.get_json()
+    product_id = data['product_id']
+    quantity = data['quantity']
+
     product = Product.query.get(product_id)
-    if not product:
+
+    if product is None:
         return jsonify({'error': 'Product not found'}), 404
+
     if product.stock_quantity < quantity:
-        return jsonify({'error': 'Not enough stock'}), 400
-    cart_item = CartItem.query.filter_by(product_id=product_id).first()
-    if cart_item:
-        cart_item.quantity += quantity
-    else:
-        cart_item = CartItem(product_id=product_id, quantity=quantity)
-        db.session.add(cart_item)
-    db.session.commit()
-    return jsonify({'message': 'Item added to cart'})
+        return jsonify({'error': 'Not enough stock available'}), 400
 
-# Route to remove an item from the cart
-@app.route('/cart/<int:item_id>', methods=['DELETE'])
-def remove_from_cart(item_id):
-    cart_item = CartItem.query.get(item_id)
-    if not cart_item:
-        return jsonify({'error': 'Item not found in cart'}), 404
-    db.session.delete(cart_item)
+    # Adjust stock quantity
+    product.stock_quantity -= quantity
     db.session.commit()
-    return jsonify({'message': 'Item removed from cart'})
 
-# Route to create an order
-@app.route('/orders', methods=['POST'])
-def create_order():
-    cart_items = CartItem.query.all()
-    if not cart_items:
-        return jsonify({'error': 'Cart is empty'}), 400
-    
-    total_amount = sum(item.product.price * item.quantity for item in cart_items)
+    # Create the order
+    total_amount = product.price * quantity
     order = Order(total_amount=total_amount, status='Pending')
     db.session.add(order)
     db.session.commit()
 
-    order_items = [
-        OrderItem(order_id=order.id, product_id=item.product_id, quantity=item.quantity, unit_price=item.product.price)
-        for item in cart_items
-    ]
-    db.session.bulk_save_objects(order_items)
+    # Add the order item
+    order_item = OrderItem(order_id=order.id, product_id=product_id, quantity=quantity, unit_price=product.price)
+    db.session.add(order_item)
     db.session.commit()
 
-    # Clear the cart after order is placed
-    CartItem.query.delete()
-    db.session.commit()
-
-    return jsonify({'message': 'Order placed successfully', 'order_id': order.id})
-
-# Route to view all orders
-@app.route('/orders', methods=['GET'])
-def view_orders():
-    orders = Order.query.all()
-    order_list = [{
-        'id': order.id,
-        'order_date': order.order_date,
-        'total_amount': order.total_amount,
-        'status': order.status,
-        'items': [{
-            'product_id': item.product_id,
-            'product_name': item.product.name,
-            'quantity': item.quantity,
-            'unit_price': item.unit_price
-        } for item in order.items]
-    } for order in orders]
-    return jsonify({'orders': order_list})
+    return jsonify({'message': 'Order placed successfully', 'order_id': order.id}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
