@@ -8,6 +8,8 @@ flask-sqlalchemy = "*"
 flask = "*"
 flask-migrate = "*"
 sqlalchemy = "*"
+flask-cors = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
