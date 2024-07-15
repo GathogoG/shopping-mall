@@ -110,4 +110,188 @@
   background-color: crimson;
   color: white;
 }
+.about-section {
+  padding-top: 80px;
+  padding-bottom: 80px;
+  background-color: #f5f5f5;
+}
+
+.about-left-content {
+  margin-top: 20px;
+}
+
+.about-left-content h3 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.about-left-content p {
+  font-size: 16px;
+  color: #666;
+}
+
+.about-right {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+  margin-bottom: 20px;
+}
+
+.section-header .subtitle {
+  font-size: 18px;
+  color: #333;
+}
+
+.section-header .title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.section-header p {
+  font-size: 16px;
+  color: #666;
+}
+
+.section-wrapper {
+  margin-top: 20px;
+}
+
+.lab-ul {
+  list-style: none;
+  padding: 0;
+}
+
+.lab-ul li {
+  margin-bottom: 20px;
+}
+
+.sr-left {
+  float: left;
+  margin-right: 20px;
+}
+
+.sr-left img {
+  max-width: 100px;
+  height: auto;
+}
+
+.sr-right h5 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.sr-right p {
+  font-size: 16px;
+  color: #666;
+}
+.map-address-section {
+  padding: 80px 0;
+  background-color: #f5f5f5;
+}
+
+.section-header {
+  margin-bottom: 40px;
+}
+
+.section-header .subtitle {
+  font-size: 24px;
+  color: #333;
+}
+
+.section-header .title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.section-wrapper {
+  margin-top: 40px;
+}
+
+.contact-item {
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.contact-thumb img {
+  max-width: 60px;
+  height: auto;
+}
+
+.contact-content {
+  margin-left: 20px;
+}
+
+.contact-content .title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.contact-content p {
+  font-size: 16px;
+  color: #666;
+}
+
+.contact-section {
+  padding: 80px 0;
+  background-color: #fff;
+}
+
+.contact-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.form-group.w-100 {
+  text-align: center;
+}
+
+.lab-btn {
+  background-color: #333;
+  color: #fff;
+  padding: 12px 24px;
+  font-size: 18px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.lab-btn span {
+  display: block;
+}
+
+.lab-btn:hover {
+  background-color: #555;
+}
 
