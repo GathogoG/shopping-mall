@@ -17,6 +17,7 @@ const Register = () => {
         <div class="input-group">
         <label for="pass">password</label>
         <input  type='text' id='pass' className='input'></input>
+        <button>submit</button>
         </div>
         </form>
     </div>
