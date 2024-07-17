@@ -1,5 +1,4 @@
-import logging
-from logging.handlers import RotatingFileHandler
+import os
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -7,7 +6,7 @@ from flask_migrate import Migrate
 from models import db, Product, CartItem, Order, OrderItem, Payment
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///shopping.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://shopping_backend_user:eUYNDb7vr1BmclvdYv8x1pXP33cOysuX@dpg-cqbpuqmehbks73dt4l4g-a.oregon-postgres.render.com/shopping_backend')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize CORS
