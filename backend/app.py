@@ -1,4 +1,6 @@
 import os
+import logging
+from logging.handlers import RotatingFileHandler
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -62,4 +64,3 @@ def add_to_cart():
 
 if __name__ == '__main__':
     app.run(port=5555)
-    app.run(debug=True)
