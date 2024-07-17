@@ -6,7 +6,7 @@ import Home from './Pages/Home';
 import Navbar from './Components/Navbar';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
-import Shop from './Pages/Shop';
+import Shop from './Components/Shop';
 import './App.css';
 
 
