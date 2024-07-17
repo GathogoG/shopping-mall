@@ -23,7 +23,7 @@ const Navbar = () => {
           {menu === "shop" ? <hr /> : <></>}
         </li>
         <li onClick={() => setMenu("about")}>
-          <Link to="/about">About</Link>
+          <Link to="/about"> About</Link>
           {menu === "about" ? <hr /> : <></>}
         </li>
         <li onClick={() => setMenu("contact")}>
