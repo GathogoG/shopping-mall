@@ -1,3 +1,4 @@
+import os
 from app import app, db
 from models import Product, CartItem, Order, OrderItem
 
@@ -16,8 +17,7 @@ def seed_database():
             Product(name='House', description='Description for House', price=279.99, stock_quantity=20, image_url='https://i.pinimg.com/236x/23/78/bb/2378bb2b1e21fce6b3ae085cd462b121.jpg'),
             Product(name='Laptop', description='High-performance laptop', price=1200.00, stock_quantity=30, image_url='https://i.pinimg.com/474x/d3/eb/3e/d3eb3ee3d2d3afa4d6d2d130f0c3c21f.jpg'),
             Product(name='Notebook', description='Spiral notebook', price=5.99, stock_quantity=150, image_url='https://i.pinimg.com/564x/6f/0e/ef/6f0eef5a702b361c799bebcbf5e67999.jpg'),
-            Product(name='Headphones', description='Noise-cancelling headphones', price=199.99, stock_quantity=75, image_url='https://i.pinimg.com/236x/07/7d/a6/077da67b6e52629d7092725956440be7.jpg'),
-            Product(name='Keyboard', description='Used for typing', price=200.99, stock_quantity=90, image_url='https://i.pinimg.com/564x/ca/d2/10/cad210e790351a57e4f5834d83340f4e.jpg')
+            Product(name='Headphones', description='Noise-cancelling headphones', price=199.99, stock_quantity=75, image_url='https://i.pinimg.com/236x/07/7d/a6/077da67b6e52629d7092725956440be7.jpg')
         ]
 
         db.session.bulk_save_objects(products)  # Efficiently add multiple products
