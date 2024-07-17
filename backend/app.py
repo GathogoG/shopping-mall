@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import logging
 from logging.handlers import RotatingFileHandler
 from flask import Flask, jsonify, request
@@ -7,8 +8,11 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from models import db, Product, CartItem, Order, OrderItem, Payment
 
+# Load environment variables from .env file
+load_dotenv()
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql://shopping_backend_user:eUYNDb7vr1BmclvdYv8x1pXP33cOysuX@dpg-cqbpuqmehbks73dt4l4g-a.oregon-postgres.render.com/shopping_backend')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize CORS
@@ -34,9 +38,8 @@ if not app.debug:
 def get_products():
     try:
         products = Product.query.all()
-        product_list = []
-        for product in products:
-            product_data = {
+        product_list = [
+            {
                 'id': product.id,
                 'name': product.name,
                 'description': product.description,
@@ -44,7 +47,8 @@ def get_products():
                 'stock_quantity': product.stock_quantity,
                 'image_url': product.image_url
             }
-            product_list.append(product_data)
+            for product in products
+        ]
         return jsonify({'products': product_list})
     except Exception as e:
         app.logger.error(f"Error fetching products: {e}")
