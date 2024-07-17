@@ -32,35 +32,43 @@ if not app.debug:
 
 @app.route('/products', methods=['GET'])
 def get_products():
-    products = Product.query.all()
-    product_list = []
-    for product in products:
-        product_data = {
-            'id': product.id,
-            'name': product.name,
-            'description': product.description,
-            'price': product.price,
-            'stock_quantity': product.stock_quantity,
-            'image_url': product.image_url
-        }
-        product_list.append(product_data)
-    return jsonify({'products': product_list})
+    try:
+        products = Product.query.all()
+        product_list = []
+        for product in products:
+            product_data = {
+                'id': product.id,
+                'name': product.name,
+                'description': product.description,
+                'price': product.price,
+                'stock_quantity': product.stock_quantity,
+                'image_url': product.image_url
+            }
+            product_list.append(product_data)
+        return jsonify({'products': product_list})
+    except Exception as e:
+        app.logger.error(f"Error fetching products: {e}")
+        return jsonify({'message': 'Error fetching products'}), 500
 
 @app.route('/cart', methods=['POST'])
 def add_to_cart():
-    data = request.get_json()
-    product_id = data.get('product_id')
-    quantity = data.get('quantity')
+    try:
+        data = request.get_json()
+        product_id = data.get('product_id')
+        quantity = data.get('quantity')
 
-    product = Product.query.get(product_id)
-    if product and product.stock_quantity >= quantity:
-        cart_item = CartItem(product_id=product_id, quantity=quantity)
-        db.session.add(cart_item)
-        product.stock_quantity -= quantity
-        db.session.commit()
-        return jsonify({'message': 'Item added to cart successfully!'})
-    else:
-        return jsonify({'message': 'Item is out of stock!'}), 400
+        product = Product.query.get(product_id)
+        if product and product.stock_quantity >= quantity:
+            cart_item = CartItem(product_id=product_id, quantity=quantity)
+            db.session.add(cart_item)
+            product.stock_quantity -= quantity
+            db.session.commit()
+            return jsonify({'message': 'Item added to cart successfully!'})
+        else:
+            return jsonify({'message': 'Item is out of stock!'}), 400
+    except Exception as e:
+        app.logger.error(f"Error adding item to cart: {e}")
+        return jsonify({'message': 'Error adding item to cart'}), 500
 
 if __name__ == '__main__':
     app.run(port=5555)
