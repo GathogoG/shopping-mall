@@ -1,1 +1,0 @@
-2024-07-17 19:58:47,954 ERROR: Error adding item to cart: 415 Unsupported Media Type: Did not attempt to load JSON data because the request Content-Type was not 'application/json'. [in /home/dextermnesh/Documents/testers/shopping-mall/backend/app.py:74]
