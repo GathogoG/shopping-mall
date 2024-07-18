@@ -74,5 +74,4 @@ def add_to_cart():
         app.logger.error(f"Error adding item to cart: {e}")
         return jsonify({'message': 'Error adding item to cart'}), 500
 
-if __name__ == '__main__':
-    app.run(port=5555)
+# if __name__ == '__main__':
