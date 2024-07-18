@@ -7,6 +7,7 @@ import Navbar from './Components/Navbar';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
 import Shop from './Components/Shop';
+import Cart from './Components/cart';
 import './App.css';
 
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/cart" element={<Cart />} />
         </Routes>
       </div>
     </Router>

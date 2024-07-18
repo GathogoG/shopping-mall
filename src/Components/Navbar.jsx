@@ -39,8 +39,10 @@ const Navbar = () => {
         <Link to="/register">
         <button>Register</button>
         </Link>
-        <img src={cart_icon} alt="cart icon" />
-        <div className="nav-cart-count">0</div>
+        <Link to="/cart">
+          <img src={cart_icon} alt="cart icon" />
+        </Link>
+        
       </div>
     </div>
   );

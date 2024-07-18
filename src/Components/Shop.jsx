@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Shop.css';  // Assuming you have a CSS file for styling
 
 function Shop() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch('https://shopping-backend-wlu9.onrender.com/products')
@@ -30,6 +32,10 @@ function Shop() {
       });
   }, []);
 
+  const handleAddToCart = (item) => {
+    navigate('/cart', { state: { item } });
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -48,7 +54,7 @@ function Shop() {
             <p className="card-price">${item.price.toFixed(2)}</p>
             <p className="card-description">{item.description}</p>
             <p className="card-stock">Stock: {item.stock_quantity}</p>
-            <button className="card-button">Add to Cart</button>
+            <button className="card-button" onClick={() => handleAddToCart(item)}>Add to Cart</button>
           </div>
         </div>
       ))}
