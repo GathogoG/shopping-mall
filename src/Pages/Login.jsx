@@ -1,33 +1,74 @@
-import React from 'react'
-import './Signup.css'
+import React, { useState } from 'react';
+// import './Auth.css';
 
 const Login = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    fetch('https://shopping-backend-wlu9.onrender.com/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+          // Handle successful login (e.g., redirect to home page)
+        } else {
+          // Handle login failure
+          console.error(data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  };
+
   return (
-    <div className='login'>
-        <h1>Login</h1>
-      <form id='form'>
-        <div className="input-group">
-        <label htmlFor="name">Name</label>
-        <input  type='text' id='name' className='input'></input>
+    <div className='auth-container'>
+      <h2>Login</h2>
+      <form onSubmit={handleSubmit}>
+        <div className='input-group'>
+          <label htmlFor='email'>Email</label>
+          <input
+            type='email'
+            id='email'
+            name='email'
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
         </div>
-        <div className="input-group">
-        <label htmlFor="email">Email</label>
-        <input  type='text' id='email' className='input'></input>
+        <div className='input-group'>
+          <label htmlFor='password'>Password</label>
+          <input
+            type='password'
+            id='password'
+            name='password'
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
         </div>
-        <div className="input-group">
-        <label htmlFor="pass">Password</label>
-        <input  type='password' id='pass' className='input'></input>
-        </div>
-        <div className="input-group">
-          <button type="submit">Login</button>
-        </div>
-        <div>
-            <h3>Don't have an account?</h3>
-            <button><a href='./Register'>Sign Up</a></button>
-        </div>
+        <button type='submit'>Login</button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
