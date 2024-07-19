@@ -17,7 +17,6 @@ function Shop() {
         return response.json();
       })
       .then(data => {
-        console.log(data);  // Log the data to the console
         if (data && Array.isArray(data.products)) {
           setItems(data.products);
         } else {
@@ -33,7 +32,33 @@ function Shop() {
   }, []);
 
   const handleAddToCart = (item) => {
-    navigate('/cart', { state: { item } });
+    // Decrease stock quantity
+    const updatedItem = { ...item, stock_quantity: item.stock_quantity - 1 };
+
+    // Update the backend stock quantity and add to cart
+    fetch(`https://shopping-backend-wlu9.onrender.com/cart/add`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ product_id: item.id, quantity: 1 })
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to add item to cart');
+        }
+        return response.json();
+      })
+      .then(() => {
+        // Update state with the new stock quantity
+        setItems(items.map(i => (i.id === item.id ? updatedItem : i)));
+
+        // Navigate to the cart page
+        navigate('/cart');
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   };
 
   if (loading) {
@@ -54,7 +79,13 @@ function Shop() {
             <p className="card-price">${item.price.toFixed(2)}</p>
             <p className="card-description">{item.description}</p>
             <p className="card-stock">Stock: {item.stock_quantity}</p>
-            <button className="card-button" onClick={() => handleAddToCart(item)}>Add to Cart</button>
+            <button 
+              className="card-button" 
+              onClick={() => handleAddToCart(item)} 
+              disabled={item.stock_quantity === 0}
+            >
+              {item.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+            </button>
           </div>
         </div>
       ))}

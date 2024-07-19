@@ -1,24 +1,27 @@
 import React from 'react'
+import './Signup.css'
 
 const Register = () => {
   return (
-    <div>
+    <div className='register'>
+      <h1>Register</h1>
       <form id='form'>
-        <div class="input-group">
-        <label for="name">name</label>
+        <div className="input-group">
+        <label htmlFor="name">Name</label>
         <input  type='text' id='name' className='input'></input>
         </div>
-        <br></br>
-        <div class="input-group">
-        <label for="email">email</label>
+        <div className="input-group">
+        <label htmlFor="email">Email</label>
         <input  type='text' id='email' className='input'></input>
         </div>
-        <br></br>
-        <div class="input-group">
-        <label for="pass">password</label>
-        <input  type='text' id='pass' className='input'></input>
+        <div className="input-group">
+        <label htmlFor="pass">Password</label>
+        <input  type='password' id='pass' className='input'></input>
         </div>
-        </form>
+        <div className="input-group">
+          <button type="submit">Register</button>
+        </div>
+      </form>
     </div>
   )
 }
