@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 import './Register.css'; // Import the CSS file for styling
 
 const Register = () => {
@@ -7,6 +8,8 @@ const Register = () => {
     email: '',
     password: '',
   });
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleChange = (e) => {
     setFormData({
@@ -27,10 +30,15 @@ const Register = () => {
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data.message);
-        // Handle successful registration (e.g., redirect to login page)
+        if (data.message) {
+          setMessage(data.message); // Set the registration message
+          setTimeout(() => {
+            navigate('/login'); // Redirect to login page after 2 seconds
+          }, 2000);
+        }
       })
       .catch(error => {
+        setMessage('An error occurred. Please try again later.');
         console.error('Error:', error);
       });
   };
@@ -75,6 +83,7 @@ const Register = () => {
           </div>
           <button type='submit' className='submit-btn'>Register</button>
         </form>
+        {message && <p className='message'>{message}</p>} {/* Display the message */}
       </div>
     </div>
   );

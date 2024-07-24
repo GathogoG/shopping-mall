@@ -18,7 +18,9 @@ function App() {
         <Navbar />
         <Routes>
         <Route path="/register" element={<Register />} />
-          <Route path="/" element={<Home />} /> 
+        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Login />} /> {/* Default route */}
+          {/* <Route path="/" element={<Home />} />  */}
           <Route path="/about" element={<About />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/contact" element={<Contact />} />

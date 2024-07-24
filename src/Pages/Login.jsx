@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 import './Login.css'; // Import the CSS file for styling
 
 const Login = () => {
@@ -8,6 +8,7 @@ const Login = () => {
     password: '',
   });
   const [message, setMessage] = useState('');
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleChange = (e) => {
     setFormData({
@@ -31,6 +32,9 @@ const Login = () => {
         if (data.access_token) {
           localStorage.setItem('token', data.access_token);
           setMessage(data.message); // Set the personalized welcome message
+          setTimeout(() => {
+            navigate('/'); // Redirect to home page after 2 seconds
+          }, 2000);
         } else {
           setMessage(data.message); // Set the error message
         }

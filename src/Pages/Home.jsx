@@ -6,7 +6,7 @@ import { AiOutlineHeart } from "react-icons/ai";
 
 export default function Home() {
   return (
-    <>
+    <div className="background-image">
       <div className="container py-5">
         <div className="text-center">
           <h1 className="display-3 welcome-heading">Welcome to QIQA Mall!</h1>
@@ -57,6 +57,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

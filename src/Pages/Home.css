@@ -1,3 +1,4 @@
+/* Home section */
 .Home {
     width: 100%;
     height: 90vh;
@@ -5,17 +6,18 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background-image: url('https://i.pinimg.com/564x/61/c7/25/61c725b5b2c1aaa84460e01a745f5d55.jpg'); /* Add your background image here */
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     font-size: 2rem;
     color: white;
+    text-align: center;
   }
   
   .Home h6 {
     font-size: 1.1rem;
     width: 60%;
-    text-align: center;
     margin: 0.6rem 0 1rem;
   }
   
@@ -41,7 +43,7 @@
     transition: 0.3s;
   }
   
-  /* why-choose-us */
+  /* Why Choose Us section */
   .why-choose-us {
     width: 100%;
     min-height: 60vh;
@@ -53,7 +55,6 @@
   }
   
   .choose-us-container {
-    /* border: 1px solid black; */
     margin: 2rem auto;
     width: 90%;
     display: flex;
@@ -63,7 +64,6 @@
   }
   
   .choose-us-container .choose-us-child {
-    /* border: 1px solid white; */
     width: 33%;
     display: flex;
     flex-direction: column;
@@ -82,8 +82,9 @@
     margin-bottom: 0.6rem;
   }
   
+  /* Media queries */
   @media screen and (max-width: 1024px) {
-    .HomeContactSection {
+    .Home {
       height: 100vh;
       font-size: 1.5rem;
     }
@@ -101,41 +102,42 @@
     .choose-us-container .choose-us-child {
       width: 100%;
     }
+  
     .container {
-        padding-top: 20px;
-      }
-      
-      .welcome-heading {
-        font-size: 3.5em;
-        margin-bottom: 10px;
-      }
-      
-      .welcome-subheading {
-        font-size: 1.5em;
-        margin-bottom: 30px;
-        color: #555;
-      }
-      
-      .bg-light {
-        background-color: #f8f9fa;
-      }
-      
-      .card {
-        margin: 20px 0;
-      }
-      
-      .text-primary {
-        color: #007bff !important;
-      }
-      
-      .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-      }
-      
-      .btn-primary:hover {
-        background-color: #0056b3;
-        border-color: #0056b3;
-      }
-      
+      padding-top: 20px;
+    }
+  
+    .welcome-heading {
+      font-size: 3.5em;
+      margin-bottom: 10px;
+    }
+  
+    .welcome-subheading {
+      font-size: 1.5em;
+      margin-bottom: 30px;
+      color: #555;
+    }
+  
+    .bg-light {
+      background-color: #f8f9fa;
+    }
+  
+    .card {
+      margin: 20px 0;
+    }
+  
+    .text-primary {
+      color: #007bff !important;
+    }
+  
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+  
+    .btn-primary:hover {
+      background-color: #0056b3;
+      border-color: #0056b3;
+    }
   }
+  
