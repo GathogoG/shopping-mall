@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-// import './Auth.css';
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+  const [message, setMessage] = useState('');
 
   const handleChange = (e) => {
     setFormData({
@@ -26,15 +26,15 @@ const Login = () => {
     })
       .then(response => response.json())
       .then(data => {
-        if (data.token) {
-          localStorage.setItem('token', data.token);
-          // Handle successful login (e.g., redirect to home page)
+        if (data.access_token) {
+          localStorage.setItem('token', data.access_token);
+          setMessage(data.message); // Set the personalized welcome message
         } else {
-          // Handle login failure
-          console.error(data.message);
+          setMessage(data.message); // Set the error message
         }
       })
       .catch(error => {
+        setMessage('An error occurred. Please try again later.');
         console.error('Error:', error);
       });
   };
@@ -67,6 +67,7 @@ const Login = () => {
         </div>
         <button type='submit'>Login</button>
       </form>
+      {message && <p>{message}</p>} {/* Display the message */}
     </div>
   );
 };
