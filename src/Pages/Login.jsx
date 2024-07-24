@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import './Login.css'; // Import the CSS file for styling
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -41,33 +43,38 @@ const Login = () => {
 
   return (
     <div className='auth-container'>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div className='input-group'>
-          <label htmlFor='email'>Email</label>
-          <input
-            type='email'
-            id='email'
-            name='email'
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className='input-group'>
-          <label htmlFor='password'>Password</label>
-          <input
-            type='password'
-            id='password'
-            name='password'
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type='submit'>Login</button>
-      </form>
-      {message && <p>{message}</p>} {/* Display the message */}
+      <div className='auth-box'>
+        <h2 className='auth-heading'>Login</h2>
+        <form onSubmit={handleSubmit}>
+          <div className='input-group'>
+            <label htmlFor='email'>Email</label>
+            <input
+              type='email'
+              id='email'
+              name='email'
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className='input-group'>
+            <label htmlFor='password'>Password</label>
+            <input
+              type='password'
+              id='password'
+              name='password'
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button type='submit' className='submit-btn'>Login</button>
+        </form>
+        {message && <p className='message'>{message}</p>} {/* Display the message */}
+        <p className='register-link'>
+          Don't have an account? <Link to='/register'>Register here</Link>
+        </p>
+      </div>
     </div>
   );
 };

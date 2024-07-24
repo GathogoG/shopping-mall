@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './Cart.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Elements } from '@stripe/react-stripe-js'; // Import Stripe Elements
+import { loadStripe } from '@stripe/stripe-js'; // Import Stripe loader
+import CheckoutForm from '../Components/Checkout';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+
+
+const stripePromise = loadStripe('YOUR_STRIPE_PUBLIC_KEY'); // Replace with your Stripe public key
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -95,51 +104,69 @@ function Cart() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="text-center">Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="text-center text-danger">Error: {error}</div>;
   }
 
   return (
-    <div className="cart-container">
-      <h2>Cart</h2>
+    <div className="container cart-container">
+      <h2 className="my-4">Cart</h2>
       {cartItems.length === 0 ? (
-        <div>Your cart is empty</div>
+        <div className="text-center">Your cart is empty</div>
       ) : (
         cartItems.map(item => (
-          <div key={item.id} className="cart-item">
+          <div key={item.id} className="d-flex align-items-center mb-3 cart-item">
             <img src={item.product.image_url} alt={item.product.name} className="cart-item-image" />
-            <div className="cart-item-details">
-              <h3>{item.product.name}</h3>
+            <div className="cart-item-details ml-3">
+              <h3 className="h5">{item.product.name}</h3>
               <p>Price: ${item.product.price.toFixed(2)}</p>
               <p>Quantity: {item.quantity}</p>
-              <button onClick={() => handleDelete(item.id)} className="delete-button">Delete</button>
+              <button onClick={() => handleDelete(item.id)} className="btn btn-danger">Delete</button>
             </div>
           </div>
         ))
       )}
       {cartItems.length > 0 && (
-        <button onClick={handlePurchase} className="purchase-button">Purchase</button>
+        <button onClick={handlePurchase} className="btn btn-success mt-3">Purchase</button>
       )}
 
       {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <h2>Payment Information</h2>
-            <p>Total Amount: ${paymentInfo.payment_amount.toFixed(2)}</p>
-            <label>
-              Payment Method:
-              <input
-                type="text"
-                name="payment_method"
-                value={paymentInfo.payment_method}
-                onChange={handlePaymentChange}
-              />
-            </label>
-            <button onClick={handlePaymentSubmit} className="submit-button">Submit Payment</button>
-            <button onClick={() => setIsModalOpen(false)} className="close-button">Close</button>
+        <div className="modal fade show d-block" role="dialog">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Payment Information</h5>
+                <button type="button" className="close" onClick={() => setIsModalOpen(false)}>
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <p>Total Amount: ${paymentInfo.payment_amount.toFixed(2)}</p>
+                <div className="form-group">
+                  <label htmlFor="payment_method">Payment Method:</label>
+                  <input
+                    type="text"
+                    id="payment_method"
+                    name="payment_method"
+                    className="form-control"
+                    value={paymentInfo.payment_method}
+                    onChange={handlePaymentChange}
+                  />
+                </div>
+                <div className="footer">
+                  <Elements stripe={stripePromise}>
+                    <CheckoutForm />
+                  </Elements>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button onClick={handlePaymentSubmit} className="btn btn-success">Submit Payment</button>
+                <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>Close</button>
+              </div>
+            </div>
           </div>
         </div>
       )}

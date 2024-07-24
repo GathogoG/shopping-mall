@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './Register.css'; // Import the CSS file for styling
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -36,43 +37,45 @@ const Register = () => {
 
   return (
     <div className='auth-container'>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <div className='input-group'>
-          <label htmlFor='username'>Username</label>
-          <input
-            type='text'
-            id='username'
-            name='username'
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className='input-group'>
-          <label htmlFor='email'>Email</label>
-          <input
-            type='email'
-            id='email'
-            name='email'
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className='input-group'>
-          <label htmlFor='password'>Password</label>
-          <input
-            type='password'
-            id='password'
-            name='password'
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type='submit'>Register</button>
-      </form>
+      <div className='auth-box'>
+        <h2 className='auth-heading'>Register</h2>
+        <form onSubmit={handleSubmit}>
+          <div className='input-group'>
+            <label htmlFor='username'>Username</label>
+            <input
+              type='text'
+              id='username'
+              name='username'
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className='input-group'>
+            <label htmlFor='email'>Email</label>
+            <input
+              type='email'
+              id='email'
+              name='email'
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className='input-group'>
+            <label htmlFor='password'>Password</label>
+            <input
+              type='password'
+              id='password'
+              name='password'
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button type='submit' className='submit-btn'>Register</button>
+        </form>
+      </div>
     </div>
   );
 };

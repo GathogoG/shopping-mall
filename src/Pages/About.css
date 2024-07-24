@@ -1,0 +1,91 @@
+.about-section {
+    padding: 60px 0;
+    background-color: #f4f4f4;
+  }
+  
+  .about-left {
+    text-align: center;
+  }
+  
+  .abs-thumb img {
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .about-left-content {
+    margin-top: 20px;
+  }
+  
+  .year-experience {
+    font-size: 2.5rem;
+    color: #007bff;
+    margin-bottom: 10px;
+  }
+  
+  .experience-desc {
+    font-size: 1.2rem;
+    color: #555;
+  }
+  
+  .about-right {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .section-header {
+    text-align: left;
+    margin-bottom: 20px;
+  }
+  
+  .section-header .subtitle {
+    font-size: 1rem;
+    color: #007bff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .section-header .title {
+    font-size: 2rem;
+    color: #333;
+    margin: 10px 0;
+  }
+  
+  .section-header .desc {
+    font-size: 1.1rem;
+    color: #666;
+  }
+  
+  .section-wrapper {
+    margin-top: 20px;
+  }
+  
+  .lab-ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .about-list-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .img-icon {
+    width: 60px;
+    height: 60px;
+    margin-right: 20px;
+  }
+  
+  .item-title {
+    font-size: 1.2rem;
+    color: #333;
+  }
+  
+  .item-desc {
+    font-size: 1rem;
+    color: #666;
+  }
+  
